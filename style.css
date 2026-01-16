@@ -19,6 +19,7 @@ body {
 
 .layout {
   display: flex;
+  flex-wrap: wrap;
   max-width: 1300px;
   margin: 20px auto;
   gap: 20px;
@@ -27,6 +28,8 @@ body {
 
 .painel-esquerdo {
   width: 320px;
+  min-width: 280px;
+  flex: 1;
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -49,12 +52,14 @@ body {
 .linha-busca input {
   flex: 1;
   padding: 8px;
+  font-size: 16px;
   border: 1px solid #ccc;
   border-radius: 4px;
 }
 
 .linha-busca button {
   padding: 8px 14px;
+  font-size: 16px;
   background: #004b8d;
   color: white;
   border: none;
@@ -70,8 +75,9 @@ body {
 }
 
 .lista-alfabeto button {
-  min-width: 32px;
-  height: 32px;
+  min-width: 36px;
+  height: 36px;
+  font-size: 18px;
   border: none;
   background: transparent;
   color: #004b8d;
@@ -96,23 +102,18 @@ body {
 }
 
 #lista-palavras li {
-  padding: 6px;
+  font-size: 18px;
+  padding: 10px;
   border-bottom: 1px solid #eee;
   cursor: pointer;
 }
 
 .resultado {
-  flex: 1;
+  flex: 2;
   background: white;
   padding: 20px;
   border-radius: 6px;
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-.mensagem-inicial,
-.mensagem-erro {
-  font-size: 14px;
-  color: #666;
 }
 
 .galeria {
@@ -124,7 +125,7 @@ body {
 
 .galeria img {
   width: 100%;
-  aspect-ratio: 1 / 1;
+  max-height: 300px;
   object-fit: cover;
   border-radius: 6px;
   cursor: pointer;
@@ -132,7 +133,7 @@ body {
 
 .galeria video {
   width: 100%;
-  max-height: 300px;
+  max-height: 320px;
   object-fit: contain;
   background: #000;
   border-radius: 6px;
@@ -140,17 +141,16 @@ body {
 
 .descricao-box {
   margin-top: 20px;
-  padding: 18px;
+  padding: 20px;
   background: #e8f0fa;
   border-left: 5px solid #004b8d;
   border-radius: 6px;
-  font-size: 17px;
+  font-size: 18px;
   line-height: 1.7;
   color: #1f2d3d;
   font-weight: 500;
 }
 
-/* Modal */
 .modal {
   display: none;
   position: fixed;
@@ -179,53 +179,14 @@ body {
   cursor: pointer;
 }
 
-/* Botão lateral PESQUISAR (escondido por padrão, só no vertical) */
 .botao-pesquisar {
   display: none;
 }
 
-/* MODO VERTICAL (celular em pé) */
+/* MODO VERTICAL */
 @media screen and (orientation: portrait) {
-
   .layout {
     flex-direction: column;
-  }
-
-  .topo h1 {
-    font-size: 24px;
-  }
-
-  .topo p {
-    font-size: 16px;
-  }
-
-  .linha-busca input,
-  .linha-busca button {
-    font-size: 16px;
-  }
-
-  .lista-alfabeto button {
-    font-size: 18px;
-    min-width: 36px;
-    height: 36px;
-  }
-
-  #lista-palavras li {
-    font-size: 18px;
-    padding: 10px;
-  }
-
-  .descricao-box {
-    font-size: 18px;
-    padding: 20px;
-  }
-
-  .galeria img {
-    max-height: 300px;
-  }
-
-  .galeria video {
-    max-height: 320px;
   }
 
   .painel-esquerdo {
