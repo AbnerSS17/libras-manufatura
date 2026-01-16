@@ -10,6 +10,15 @@ const modalImg = document.getElementById("modal-img");
 const modalVideo = document.getElementById("modal-video");
 const fecharModal = document.getElementById("fechar-modal");
 
+/* Estado inicial: só mensagem, sem vídeo */
+function estadoInicial() {
+  tituloPalavraEl.textContent = "Selecione uma palavra";
+  conteudoResultadoEl.innerHTML = `
+    <p class="mensagem-inicial">Nenhuma palavra selecionada ainda.</p>
+  `;
+}
+
+/* Alfabeto */
 function gerarAlfabeto() {
   const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   letras.forEach(letra => {
@@ -27,6 +36,7 @@ function selecionarLetra(letra, botao) {
   carregarListaDePalavras(letra);
 }
 
+/* Lista de palavras por letra */
 async function carregarListaDePalavras(letra) {
   listaPalavrasEl.innerHTML = "";
   try {
@@ -47,4 +57,100 @@ async function carregarListaDePalavras(letra) {
   }
 }
 
-async function carregar
+/* Carregar palavra (vídeo + imagens + texto) */
+async function carregarPalavra(nome) {
+  conteudoResultadoEl.innerHTML = "";
+  modal.style.display = "none";
+  modalVideo.pause();
+
+  try {
+    const resposta = await fetch(`dados/${nome}.json`);
+    if (!resposta.ok) {
+      tituloPalavraEl.textContent = nome;
+      conteudoResultadoEl.innerHTML = `
+        <p class="mensagem-erro">Palavra não encontrada no dicionário.</p>
+      `;
+      return;
+    }
+
+    const dados = await resposta.json();
+
+    tituloPalavraEl.textContent = nome;
+
+    conteudoResultadoEl.innerHTML = `
+      <div class="galeria">
+        ${dados.video ? `<video src="${dados.video}" autoplay loop muted></video>` : ""}
+        ${dados.imagens ? dados.imagens.map(img => `
+          <img src="${img}" alt="${nome}">
+        `).join("") : ""}
+      </div>
+      <div class="descricao-box">
+        ${dados.texto || ""}
+      </div>
+    `;
+
+    const videoEl = document.querySelector(".galeria video");
+    if (videoEl) {
+      videoEl.onclick = () => abrirModalVideo(dados.video);
+    }
+
+    document.querySelectorAll(".galeria img").forEach(img => {
+      img.onclick = () => abrirModalImagem(img.src);
+    });
+
+  } catch (e) {
+    tituloPalavraEl.textContent = nome;
+    conteudoResultadoEl.innerHTML = `
+      <p class="mensagem-erro">Erro ao carregar os dados da palavra.</p>
+    `;
+  }
+}
+
+/* Modal imagem */
+function abrirModalImagem(src) {
+  modal.style.display = "block";
+  modalImg.style.display = "block";
+  modalVideo.style.display = "none";
+  modalImg.src = src;
+}
+
+/* Modal vídeo */
+function abrirModalVideo(src) {
+  modal.style.display = "block";
+  modalImg.style.display = "none";
+  modalVideo.style.display = "block";
+  modalVideo.src = src;
+  modalVideo.play();
+}
+
+/* Fechar modal */
+fecharModal.onclick = () => {
+  modal.style.display = "none";
+  modalVideo.pause();
+};
+
+window.onclick = e => {
+  if (e.target === modal) {
+    modal.style.display = "none";
+    modalVideo.pause();
+  }
+};
+
+/* Busca por texto */
+botaoBuscarEl.onclick = () => {
+  const palavra = campoBuscaEl.value.trim().toUpperCase();
+  if (!palavra) return;
+  carregarPalavra(palavra);
+};
+
+campoBuscaEl.addEventListener("keyup", e => {
+  if (e.key === "Enter") {
+    const palavra = campoBuscaEl.value.trim().toUpperCase();
+    if (!palavra) return;
+    carregarPalavra(palavra);
+  }
+});
+
+/* Inicialização */
+gerarAlfabeto();
+estadoInicial();
