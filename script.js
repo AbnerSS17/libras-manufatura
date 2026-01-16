@@ -1,86 +1,126 @@
-/* estilos gerais mantidos */
+const painel = document.getElementById("painel");
+const botaoPesquisarLateral = document.getElementById("botao-pesquisar-lateral");
+const tituloPalavraEl = document.getElementById("titulo-palavra");
+const conteudoResultadoEl = document.getElementById("conteudo-resultado");
 
-.botao-pesquisar {
-  display: none;
+function emModoVertical() {
+  return window.matchMedia("(orientation: portrait)").matches;
 }
 
-/* MODO VERTICAL */
-@media screen and (orientation: portrait) {
-  .layout {
-    flex-direction: column;
-  }
+function mostrarMenu() {
+  painel.classList.remove("oculto");
+  botaoPesquisarLateral.style.display = "none";
+  tituloPalavraEl.textContent = "Selecione uma palavra";
+  conteudoResultadoEl.innerHTML = `<p class="mensagem-inicial">Nenhuma palavra selecionada ainda.</p>`;
+}
 
-  .topo h1 {
-    font-size: 24px;
-  }
+function esconderMenu() {
+  painel.classList.add("oculto");
+  botaoPesquisarLateral.style.display = "flex";
+}
 
-  .topo p {
-    font-size: 16px;
-  }
-
-  .linha-busca input,
-  .linha-busca button {
-    font-size: 16px;
-  }
-
-  .lista-alfabeto button {
-    font-size: 18px;
-    min-width: 36px;
-    height: 36px;
-  }
-
-  #lista-palavras li {
-    font-size: 18px;
-    padding: 10px;
-  }
-
-  .descricao-box {
-    font-size: 18px;
-    padding: 20px;
-  }
-
-  .galeria img {
-    max-height: 300px;
-  }
-
-  .galeria video {
-    max-height: 320px;
-  }
-
-  .painel-esquerdo {
-    position: fixed;
-    left: 0;
-    top: 0;
-    width: 80%;
-    max-width: 360px;
-    height: 100%;
-    z-index: 999;
-    box-shadow: 3px 0 10px rgba(0,0,0,0.2);
-    transition: left 0.3s ease;
-  }
-
-  .painel-esquerdo.oculto {
-    left: -100%;
-  }
-
-  .botao-pesquisar {
-    position: fixed;
-    left: 0;
-    top: 50%;
-    transform: translateY(-50%);
-    width: 40px;
-    height: 140px;
-    background: #004b8d;
-    color: white;
-    writing-mode: vertical-rl;
-    text-orientation: upright;
-    font-weight: bold;
-    font-size: 16px;
-    border-radius: 0 6px 6px 0;
-    cursor: pointer;
-    z-index: 1000;
-    display: flex;
-    align-items: center;
-    justify-content: center;
+function ajustarEstadoInicial() {
+  if (emModoVertical()) {
+    mostrarMenu();
+  } else {
+    painel.classList.remove("oculto");
+    botaoPesquisarLateral.style.display = "none";
   }
 }
+
+window.addEventListener("resize", ajustarEstadoInicial);
+
+/* GERA ALFABETO */
+function gerarAlfabeto() {
+  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  letras.forEach(letra => {
+    const btn = document.createElement("button");
+    btn.textContent = letra;
+    btn.onclick = () => selecionarLetra(letra, btn);
+    document.getElementById("lista-alfabeto").appendChild(btn);
+  });
+}
+
+/* SELECIONA LETRA */
+function selecionarLetra(letra, botao) {
+  document.querySelectorAll(".lista-alfabeto button")
+    .forEach(b => b.classList.remove("ativo"));
+  botao.classList.add("ativo");
+  carregarListaDePalavras(letra);
+}
+
+/* CARREGA LISTA DE PALAVRAS */
+async function carregarListaDePalavras(letra) {
+  const listaEl = document.getElementById("lista-palavras");
+  listaEl.innerHTML = "";
+
+  try {
+    const resposta = await fetch(`dados/${letra}.json`);
+    if (!resposta.ok) {
+      listaEl.innerHTML = "<li>Nenhuma palavra cadastrada</li>";
+      return;
+    }
+
+    const lista = await resposta.json();
+    lista.forEach(p => {
+      const li = document.createElement("li");
+      li.textContent = p;
+      li.onclick = () => carregarPalavra(p);
+      listaEl.appendChild(li);
+    });
+  } catch {
+    listaEl.innerHTML = "<li>Erro ao carregar palavras</li>";
+  }
+}
+
+/* CARREGA PALAVRA */
+async function carregarPalavra(nome) {
+  conteudoResultadoEl.innerHTML = "";
+  document.getElementById("modal").style.display = "none";
+  document.getElementById("modal-video").pause();
+
+  if (emModoVertical()) {
+    esconderMenu();
+  }
+
+  try {
+    const resposta = await fetch(`dados/${nome}.json`);
+    if (!resposta.ok) {
+      tituloPalavraEl.textContent = nome;
+      conteudoResultadoEl.innerHTML = `<p class="mensagem-erro">Palavra não encontrada no dicionário.</p>`;
+      return;
+    }
+
+    const dados = await resposta.json();
+    tituloPalavraEl.textContent = nome;
+
+    conteudoResultadoEl.innerHTML = `
+      <div class="galeria">
+        <video src="${dados.video}" autoplay loop muted></video>
+        ${dados.imagens.map(img => `<img src="${img}" alt="${nome}">`).join("")}
+      </div>
+      <div class="descricao-box">${dados.texto}</div>
+    `;
+
+    document.querySelector(".galeria video").onclick = () => abrirModalVideo(dados.video);
+    document.querySelectorAll(".galeria img").forEach(img => {
+      img.onclick = () => abrirModalImagem(img.src);
+    });
+
+  } catch {
+    tituloPalavraEl.textContent = nome;
+    conteudoResultadoEl.innerHTML = `<p class="mensagem-erro">Erro ao carregar os dados da palavra.</p>`;
+  }
+}
+
+/* MODAL */
+function abrirModalImagem(src) {
+  const modal = document.getElementById("modal");
+  modal.style.display = "block";
+  document.getElementById("modal-img").style.display = "block";
+  document.getElementById("modal-video").style.display = "none";
+  document.getElementById("modal-img").src = src;
+}
+
+function abrirModalVideo(src) {
+  const modal = document.getElementById("modal");
