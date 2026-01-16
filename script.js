@@ -14,18 +14,27 @@ const modalVideo = document.getElementById("modal-video");
 const fecharModal = document.getElementById("fechar-modal");
 
 const painel = document.getElementById("painel");
+const botaoPesquisarLateral = document.getElementById("botao-pesquisar-lateral");
+
+/* Detecta se está em modo vertical */
+function emModoVertical() {
+  return window.matchMedia("(orientation: portrait)").matches;
+}
 
 /* MENU MOBILE */
 function mostrarMenu() {
+  if (!emModoVertical()) return;
   painel.classList.remove("oculto");
+  botaoPesquisarLateral.style.display = "none";
 }
 
 function esconderMenu() {
+  if (!emModoVertical()) return;
   painel.classList.add("oculto");
+  botaoPesquisarLateral.style.display = "flex";
 }
 
 window.mostrarMenu = mostrarMenu;
-window.esconderMenu = esconderMenu;
 
 /* GERA ALFABETO */
 function gerarAlfabeto() {
@@ -80,7 +89,9 @@ async function carregarPalavra(nome) {
   modal.style.display = "none";
   modalVideo.pause();
 
-  esconderMenu(); // fecha o painel ao abrir uma palavra
+  if (emModoVertical()) {
+    esconderMenu();
+  }
 
   try {
     const resposta = await fetch(`dados/${nome}.json`);
@@ -169,5 +180,19 @@ campoBuscaEl.addEventListener("keyup", e => {
   }
 });
 
+/* Ajusta estado inicial conforme orientação */
+function ajustarEstadoInicial() {
+  if (emModoVertical()) {
+    painel.classList.remove("oculto");
+    botaoPesquisarLateral.style.display = "none";
+  } else {
+    painel.classList.remove("oculto");
+    botaoPesquisarLateral.style.display = "none";
+  }
+}
+
+window.addEventListener("resize", ajustarEstadoInicial);
+
 /* INICIALIZA */
 gerarAlfabeto();
+ajustarEstadoInicial();
