@@ -14,11 +14,10 @@
 
 <div class="layout">
 
-  <!-- LADO ESQUERDO: BUSCA + ALFABETO + LISTA DE PALAVRAS -->
   <aside class="painel-esquerdo">
 
     <section class="busca">
-      <label for="campo-busca"><strong>Buscar palavra:</strong></label>
+      <label><strong>Buscar palavra:</strong></label>
       <div class="linha-busca">
         <input type="text" id="campo-busca" placeholder="Digite a palavra...">
         <button id="botao-buscar">Buscar</button>
@@ -27,24 +26,18 @@
 
     <section class="alfabeto">
       <h3>Alfabeto</h3>
-      <div id="lista-alfabeto" class="lista-alfabeto">
-        <!-- Letras geradas via JavaScript -->
-      </div>
+      <div id="lista-alfabeto" class="lista-alfabeto"></div>
     </section>
 
     <section class="palavras">
       <h3>Palavras</h3>
-      <ul id="lista-palavras">
-        <!-- Palavras da letra selecionada -->
-      </ul>
+      <ul id="lista-palavras"></ul>
     </section>
 
   </aside>
 
-  <!-- LADO DIREITO: RESULTADO DA PALAVRA -->
   <main class="resultado">
     <h2 id="titulo-palavra">Selecione uma palavra</h2>
-
     <div id="conteudo-resultado" class="conteudo-resultado">
       <p>Nenhuma palavra selecionada ainda.</p>
     </div>
@@ -52,7 +45,7 @@
 
 </div>
 
-<!-- MODAL PARA IMAGEM/VÍDEO EM TELA CHEIA -->
+<!-- MODAL -->
 <div id="modal" class="modal">
   <span id="fechar-modal" class="fechar">&times;</span>
   <img id="modal-img" class="modal-conteudo">
