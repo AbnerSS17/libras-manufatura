@@ -108,6 +108,13 @@ body {
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
+.mensagem-inicial,
+.mensagem-erro {
+  font-size: 14px;
+  color: #666;
+}
+
+/* GRID de imagens e vídeo */
 .galeria {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -123,6 +130,7 @@ body {
   cursor: pointer;
 }
 
+/* VÍDEO: nunca cortado, sempre inteiro */
 .galeria video {
   width: 100%;
   max-height: 300px;
@@ -131,6 +139,7 @@ body {
   border-radius: 6px;
 }
 
+/* DESCRIÇÃO em caixa destacada */
 .descricao-box {
   margin-top: 20px;
   padding: 18px;
@@ -141,9 +150,9 @@ body {
   line-height: 1.7;
   color: #1f2d3d;
   font-weight: 500;
-  cursor: pointer;
 }
 
+/* MODAL */
 .modal {
   display: none;
   position: fixed;
@@ -172,10 +181,14 @@ body {
   cursor: pointer;
 }
 
+/* Botão de menu (aparece só em telas verticais) */
 .seta-voltar {
   display: none;
 }
 
+/* Layout padrão (horizontal) já está acima */
+
+/* Layout especial para telas em pé (portrait) */
 @media screen and (orientation: portrait) {
   .layout {
     flex-direction: column;
@@ -185,7 +198,8 @@ body {
     position: fixed;
     left: -100%;
     top: 0;
-    width: 100%;
+    width: 80%;
+    max-width: 360px;
     height: 100%;
     background: white;
     transition: left 0.3s ease;
@@ -196,6 +210,10 @@ body {
     left: 0;
   }
 
+  .resultado {
+    margin-top: 20px;
+  }
+
   .seta-voltar {
     display: block;
     position: fixed;
@@ -204,9 +222,16 @@ body {
     transform: translateY(-50%);
     background: #004b8d;
     color: white;
-    padding: 10px;
+    padding: 10px 12px;
     border-radius: 0 6px 6px 0;
     cursor: pointer;
     z-index: 1000;
+    font-size: 20px;
+  }
+}
+
+@media (max-width: 900px) and (orientation: landscape) {
+  .layout {
+    flex-direction: column;
   }
 }
