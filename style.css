@@ -30,6 +30,7 @@ body {
   display: flex;
   flex-direction: column;
   gap: 20px;
+  background: white;
 }
 
 .busca, .alfabeto, .palavras {
@@ -108,13 +109,6 @@ body {
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-.mensagem-inicial,
-.mensagem-erro {
-  font-size: 14px;
-  color: #666;
-}
-
-/* GRID */
 .galeria {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -130,7 +124,6 @@ body {
   cursor: pointer;
 }
 
-/* VÍDEO NUNCA CORTADO */
 .galeria video {
   width: 100%;
   max-height: 300px;
@@ -139,7 +132,6 @@ body {
   border-radius: 6px;
 }
 
-/* DESCRIÇÃO */
 .descricao-box {
   margin-top: 20px;
   padding: 18px;
@@ -181,45 +173,45 @@ body {
   cursor: pointer;
 }
 
-/* BOTÃO MENU (CELULAR EM PÉ) */
+/* Seta triangular */
 .seta-voltar {
   display: none;
 }
 
-/* LAYOUT ESPECIAL PARA CELULAR EM PÉ */
+/* MODO VERTICAL */
 @media screen and (orientation: portrait) {
+
   .layout {
     flex-direction: column;
   }
 
   .painel-esquerdo {
     position: fixed;
-    left: -100%;
+    left: 0;
     top: 0;
     width: 80%;
     max-width: 360px;
     height: 100%;
-    background: white;
     transition: left 0.3s ease;
     z-index: 999;
+    box-shadow: 3px 0 10px rgba(0,0,0,0.2);
   }
 
-  .painel-esquerdo.visivel {
-    left: 0;
+  .painel-esquerdo.oculto {
+    left: -100%;
   }
 
   .seta-voltar {
     display: block;
     position: fixed;
-    left: 0;
+    right: 0;
     top: 50%;
     transform: translateY(-50%);
+    width: 40px;
+    height: 60px;
     background: #004b8d;
-    color: white;
-    padding: 10px 12px;
-    border-radius: 0 6px 6px 0;
+    clip-path: polygon(0 0, 100% 50%, 0 100%);
     cursor: pointer;
     z-index: 1000;
-    font-size: 20px;
   }
 }
