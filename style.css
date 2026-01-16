@@ -108,18 +108,24 @@ body {
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-/* GRID PROFISSIONAL */
+.video-grande {
+  width: 100%;
+  border-radius: 6px;
+  cursor: pointer;
+  margin-bottom: 20px;
+}
+
+/* GRID DE IMAGENS IGUAIS */
 .galeria {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
   gap: 15px;
   margin-top: 20px;
 }
 
-.galeria img,
-.galeria video {
+.galeria img {
   width: 100%;
-  height: 220px;
+  height: 180px;
   object-fit: cover;
   border-radius: 6px;
   cursor: pointer;
