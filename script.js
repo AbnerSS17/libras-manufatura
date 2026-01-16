@@ -80,7 +80,7 @@ async function carregarPalavra(nome) {
   modal.style.display = "none";
   modalVideo.pause();
 
-  esconderMenu(); // fecha o menu no celular
+  esconderMenu(); // fecha o painel ao abrir uma palavra
 
   try {
     const resposta = await fetch(`dados/${nome}.json`);
