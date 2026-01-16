@@ -114,7 +114,7 @@ body {
   color: #666;
 }
 
-/* GRID de imagens e vídeo */
+/* GRID */
 .galeria {
   display: grid;
   grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
@@ -130,7 +130,7 @@ body {
   cursor: pointer;
 }
 
-/* VÍDEO: nunca cortado, sempre inteiro */
+/* VÍDEO NUNCA CORTADO */
 .galeria video {
   width: 100%;
   max-height: 300px;
@@ -139,7 +139,7 @@ body {
   border-radius: 6px;
 }
 
-/* DESCRIÇÃO em caixa destacada */
+/* DESCRIÇÃO */
 .descricao-box {
   margin-top: 20px;
   padding: 18px;
@@ -181,14 +181,12 @@ body {
   cursor: pointer;
 }
 
-/* Botão de menu (aparece só em telas verticais) */
+/* BOTÃO MENU (CELULAR EM PÉ) */
 .seta-voltar {
   display: none;
 }
 
-/* Layout padrão (horizontal) já está acima */
-
-/* Layout especial para telas em pé (portrait) */
+/* LAYOUT ESPECIAL PARA CELULAR EM PÉ */
 @media screen and (orientation: portrait) {
   .layout {
     flex-direction: column;
@@ -210,10 +208,6 @@ body {
     left: 0;
   }
 
-  .resultado {
-    margin-top: 20px;
-  }
-
   .seta-voltar {
     display: block;
     position: fixed;
@@ -227,11 +221,5 @@ body {
     cursor: pointer;
     z-index: 1000;
     font-size: 20px;
-  }
-}
-
-@media (max-width: 900px) and (orientation: landscape) {
-  .layout {
-    flex-direction: column;
   }
 }
