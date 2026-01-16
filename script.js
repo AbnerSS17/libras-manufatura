@@ -90,7 +90,7 @@ async function carregarPalavra(nome) {
       </div>
     `;
 
-    /* Garantir que o vídeo SEMPRE fique mudo */
+    /* Garante que TODOS os vídeos fiquem mudos */
     document.querySelectorAll("video").forEach(v => {
       v.muted = true;
       v.volume = 0;
@@ -127,7 +127,8 @@ function abrirModalVideo(src) {
   modalImg.style.display = "none";
   modalVideo.style.display = "block";
   modalVideo.src = src;
-  modalVideo.muted = true;  // garante mudo no modal também
+  modalVideo.muted = true;
+  modalVideo.volume = 0;
   modalVideo.play();
 }
 
@@ -159,11 +160,41 @@ campoBuscaEl.addEventListener("keyup", e => {
   }
 });
 
+/* Garante que QUALQUER vídeo da página sempre fique mudo */
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("video").forEach(v => {
+    v.muted = true;
+    v.volume = 0;
+  });
+});
+
+/* 🔇 Força o vídeo a continuar mudo mesmo em tela cheia */
+function aplicarMuteFullscreen() {
+  const fullscreenEvents = [
+    "fullscreenchange",
+    "webkitfullscreenchange",
+    "mozfullscreenchange",
+    "msfullscreenchange"
+  ];
+
+  fullscreenEvents.forEach(eventName => {
+    document.addEventListener(eventName, () => {
+      const video = 
+        document.fullscreenElement ||
+        document.webkitFullscreenElement ||
+        document.mozFullScreenElement ||
+        document.msFullscreenElement;
+
+      if (video && video.tagName === "VIDEO") {
+        video.muted = true;
+        video.volume = 0;
+      }
+    });
+  });
+}
+
+aplicarMuteFullscreen();
+
 /* Inicialização */
 gerarAlfabeto();
 estadoInicial();
-
-/* Garante que QUALQUER vídeo da página sempre fique mudo */
-document.addEventListener("DOMContentLoaded", () => {
-  document.querySelectorAll("video").forEach(v => v.muted = true);
-});
