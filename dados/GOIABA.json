@@ -1,1 +1,10 @@
-
+{
+  "video": "conteudo/ABACATE/video.mp4",
+  "texto": "O sinal de ABACATE em LIBRAS representa a fruta sendo segurada e a polpa retirada.",
+  "imagens": [
+    "conteudo/ABACATE/principal.png",
+    "conteudo/ABACATE/1.png",
+    "conteudo/ABACATE/2.png",
+    "conteudo/ABACATE/3.png"
+  ]
+}
