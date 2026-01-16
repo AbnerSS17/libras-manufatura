@@ -10,7 +10,7 @@ const modalImg = document.getElementById("modal-img");
 const modalVideo = document.getElementById("modal-video");
 const fecharModal = document.getElementById("fechar-modal");
 
-/* Estado inicial: só mensagem, sem vídeo */
+/* Estado inicial */
 function estadoInicial() {
   tituloPalavraEl.textContent = "Selecione uma palavra";
   conteudoResultadoEl.innerHTML = `
@@ -36,7 +36,7 @@ function selecionarLetra(letra, botao) {
   carregarListaDePalavras(letra);
 }
 
-/* Lista de palavras por letra */
+/* Lista de palavras */
 async function carregarListaDePalavras(letra) {
   listaPalavrasEl.innerHTML = "";
   try {
@@ -57,7 +57,7 @@ async function carregarListaDePalavras(letra) {
   }
 }
 
-/* Carregar palavra (vídeo + imagens + texto) */
+/* Carregar palavra */
 async function carregarPalavra(nome) {
   conteudoResultadoEl.innerHTML = "";
   modal.style.display = "none";
@@ -78,14 +78,15 @@ async function carregarPalavra(nome) {
     tituloPalavraEl.textContent = nome;
 
     conteudoResultadoEl.innerHTML = `
+      <div class="descricao-box">
+        ${dados.texto || ""}
+      </div>
+
       <div class="galeria">
         ${dados.video ? `<video src="${dados.video}" autoplay loop muted></video>` : ""}
         ${dados.imagens ? dados.imagens.map(img => `
           <img src="${img}" alt="${nome}">
         `).join("") : ""}
-      </div>
-      <div class="descricao-box">
-        ${dados.texto || ""}
       </div>
     `;
 
@@ -136,7 +137,7 @@ window.onclick = e => {
   }
 };
 
-/* Busca por texto */
+/* Busca */
 botaoBuscarEl.onclick = () => {
   const palavra = campoBuscaEl.value.trim().toUpperCase();
   if (!palavra) return;
