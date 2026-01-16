@@ -116,6 +116,19 @@ body {
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
+/* ======== DESCRIÇÃO ACIMA DA GALERIA ======== */
+.descricao-box {
+  margin-top: 20px;
+  padding: 20px;
+  background: #e8f0fa;
+  border-left: 5px solid #004b8d;
+  border-radius: 6px;
+  font-size: 18px;
+  line-height: 1.7;
+  color: #1f2d3d;
+  font-weight: 500;
+}
+
 /* ======== GALERIA ======== */
 .galeria {
   display: grid;
@@ -127,7 +140,8 @@ body {
 /* IMAGENS */
 .galeria img {
   width: 100%;
-  max-height: 320px;
+  height: auto;
+  max-height: 260px;
   object-fit: cover;
   border-radius: 6px;
   cursor: pointer;
@@ -136,25 +150,12 @@ body {
 /* ======== VÍDEO — NUNCA CORTA ======== */
 .galeria video {
   width: 100%;
-  height: auto;          /* mantém proporção real */
-  max-height: none;      /* impede corte vertical */
-  object-fit: contain;   /* garante vídeo inteiro */
-  background: #000;      /* barras pretas quando necessário */
+  height: auto;
+  max-height: none;
+  object-fit: contain;
+  background: #000;
   border-radius: 6px;
   cursor: pointer;
-}
-
-/* ======== DESCRIÇÃO ======== */
-.descricao-box {
-  margin-top: 20px;
-  padding: 20px;
-  background: #e8f0fa;
-  border-left: 5px solid #004b8d;
-  border-radius: 6px;
-  font-size: 18px;
-  line-height: 1.7;
-  color: #1f2d3d;
-  font-weight: 500;
 }
 
 /* ======== MODAL ======== */
@@ -186,7 +187,7 @@ body {
   cursor: pointer;
 }
 
-/* ======== MODO CELULAR (VERTICAL) ======== */
+/* ======== MODO CELULAR ======== */
 @media screen and (orientation: portrait) {
 
   .layout {
@@ -203,7 +204,12 @@ body {
     width: 100%;
   }
 
-  /* vídeo SEM CORTES no celular */
+  /* imagens menores no celular */
+  .galeria img {
+    max-height: 180px;
+  }
+
+  /* vídeo continua sem cortes */
   .galeria video {
     width: 100%;
     height: auto;
