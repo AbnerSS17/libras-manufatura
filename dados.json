@@ -1,0 +1,27 @@
+[
+  {
+    "palavra": "ABACATE",
+    "letra": "A",
+    "video": "videos/abacate.mp4",
+    "imagemPrincipal": "imagens/abacate1.png",
+    "imagens": [
+      "imagens/abacate2.png",
+      "imagens/abacate3.png",
+      "imagens/abacate4.png"
+    ],
+    "texto": "O sinal de ABACATE em LIBRAS representa a fruta sendo segurada e a polpa retirada. A mão dominante faz um movimento curto, como se estivesse raspando o interior do fruto."
+  },
+  {
+    "palavra": "GOIABA",
+    "letra": "G",
+    "video": "videos/goiaba.mp4",
+    "imagemPrincipal": "imagens/goiaba1.png",
+    "imagens": [
+      "imagens/goiaba2.png",
+      "imagens/goiaba3.png",
+      "imagens/goiaba4.png"
+    ],
+    "texto": "O sinal de GOIABA em LIBRAS sugere a forma da fruta e o ato de segurá-la. A mão dominante faz um movimento próximo ao rosto, indicando o formato arredondado."
+  }
+]
+
