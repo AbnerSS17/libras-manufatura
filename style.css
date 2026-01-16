@@ -31,7 +31,6 @@ body {
   flex-direction: column;
   gap: 20px;
   background: white;
-  transition: left 0.3s ease;
 }
 
 .busca, .alfabeto, .palavras {
@@ -174,12 +173,12 @@ body {
   cursor: pointer;
 }
 
-/* BOTÃO PESQUISAR (vertical) */
+/* Botão lateral PESQUISAR (escondido por padrão, controlado via JS) */
 .botao-pesquisar {
   display: none;
 }
 
-/* MODO VERTICAL */
+/* MODO VERTICAL (CELULAR EM PÉ) */
 @media screen and (orientation: portrait) {
 
   .layout {
@@ -195,15 +194,14 @@ body {
     height: 100%;
     z-index: 999;
     box-shadow: 3px 0 10px rgba(0,0,0,0.2);
+    transition: left 0.3s ease;
   }
 
   .painel-esquerdo.oculto {
     left: -100%;
   }
 
-  /* Botão lateral PESQUISAR */
   .botao-pesquisar {
-    display: flex;
     position: fixed;
     left: 0;
     top: 50%;
@@ -219,12 +217,8 @@ body {
     border-radius: 0 6px 6px 0;
     cursor: pointer;
     z-index: 1000;
+    display: flex;
     align-items: center;
     justify-content: center;
-  }
-
-  /* Quando o painel está aberto, o botão some */
-  .painel-esquerdo:not(.oculto) ~ .botao-pesquisar {
-    display: none;
   }
 }
