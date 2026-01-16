@@ -60,8 +60,9 @@ async function carregarPalavra(nome) {
   tituloPalavraEl.textContent = nome;
 
   conteudoResultadoEl.innerHTML = `
+    <video class="video-grande" src="${dados.video}" autoplay loop muted></video>
+
     <div class="galeria">
-      <video src="${dados.video}" autoplay loop muted></video>
       ${dados.imagens.map(img => `
         <img src="${img}" alt="${nome}">
       `).join("")}
@@ -70,7 +71,7 @@ async function carregarPalavra(nome) {
     <p class="descricao">${dados.texto}</p>
   `;
 
-  document.querySelector(".galeria video").onclick = () => abrirModalVideo(dados.video);
+  document.querySelector(".video-grande").onclick = () => abrirModalVideo(dados.video);
 
   document.querySelectorAll(".galeria img").forEach(img => {
     img.onclick = () => abrirModalImagem(img.src);
