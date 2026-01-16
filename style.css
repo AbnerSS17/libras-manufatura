@@ -31,6 +31,7 @@ body {
   flex-direction: column;
   gap: 20px;
   background: white;
+  transition: left 0.3s ease;
 }
 
 .busca, .alfabeto, .palavras {
@@ -173,8 +174,8 @@ body {
   cursor: pointer;
 }
 
-/* Seta triangular */
-.seta-voltar {
+/* BOTÃO PESQUISAR (vertical) */
+.botao-pesquisar {
   display: none;
 }
 
@@ -192,7 +193,6 @@ body {
     width: 80%;
     max-width: 360px;
     height: 100%;
-    transition: left 0.3s ease;
     z-index: 999;
     box-shadow: 3px 0 10px rgba(0,0,0,0.2);
   }
@@ -201,17 +201,30 @@ body {
     left: -100%;
   }
 
-  .seta-voltar {
-    display: block;
+  /* Botão lateral PESQUISAR */
+  .botao-pesquisar {
+    display: flex;
     position: fixed;
-    right: 0;
+    left: 0;
     top: 50%;
     transform: translateY(-50%);
     width: 40px;
-    height: 60px;
+    height: 140px;
     background: #004b8d;
-    clip-path: polygon(0 0, 100% 50%, 0 100%);
+    color: white;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 0 6px 6px 0;
     cursor: pointer;
     z-index: 1000;
+    align-items: center;
+    justify-content: center;
+  }
+
+  /* Quando o painel está aberto, o botão some */
+  .painel-esquerdo:not(.oculto) ~ .botao-pesquisar {
+    display: none;
   }
 }
