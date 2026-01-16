@@ -58,7 +58,6 @@ async function carregarListaDePalavras(letra) {
 }
 
 async function carregarPalavra(nome) {
-  // limpa conteúdo anterior e fecha modal
   conteudoResultadoEl.innerHTML = "";
   modal.style.display = "none";
   modalVideo.pause();
@@ -148,7 +147,6 @@ campoBuscaEl.addEventListener("keyup", e => {
   }
 });
 
-/* Menu lateral em telas verticais */
 function mostrarMenu() {
   const painel = document.querySelector(".painel-esquerdo");
   painel.classList.toggle("visivel");
