@@ -90,6 +90,12 @@ async function carregarPalavra(nome) {
       </div>
     `;
 
+    /* Garantir que o vídeo SEMPRE fique mudo */
+    document.querySelectorAll("video").forEach(v => {
+      v.muted = true;
+      v.volume = 0;
+    });
+
     const videoEl = document.querySelector(".galeria video");
     if (videoEl) {
       videoEl.onclick = () => abrirModalVideo(dados.video);
@@ -121,6 +127,7 @@ function abrirModalVideo(src) {
   modalImg.style.display = "none";
   modalVideo.style.display = "block";
   modalVideo.src = src;
+  modalVideo.muted = true;  // garante mudo no modal também
   modalVideo.play();
 }
 
@@ -155,3 +162,8 @@ campoBuscaEl.addEventListener("keyup", e => {
 /* Inicialização */
 gerarAlfabeto();
 estadoInicial();
+
+/* Garante que QUALQUER vídeo da página sempre fique mudo */
+document.addEventListener("DOMContentLoaded", () => {
+  document.querySelectorAll("video").forEach(v => v.muted = true);
+});
