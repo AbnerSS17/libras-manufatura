@@ -1,198 +1,224 @@
-let palavrasPorLetra = {};
-let letraAtual = null;
-
-const listaAlfabetoEl = document.getElementById("lista-alfabeto");
-const listaPalavrasEl = document.getElementById("lista-palavras");
-const campoBuscaEl = document.getElementById("campo-busca");
-const botaoBuscarEl = document.getElementById("botao-buscar");
-const tituloPalavraEl = document.getElementById("titulo-palavra");
-const conteudoResultadoEl = document.getElementById("conteudo-resultado");
-
-const modal = document.getElementById("modal");
-const modalImg = document.getElementById("modal-img");
-const modalVideo = document.getElementById("modal-video");
-const fecharModal = document.getElementById("fechar-modal");
-
-const painel = document.getElementById("painel");
-const botaoPesquisarLateral = document.getElementById("botao-pesquisar-lateral");
-
-/* Detecta se está em modo vertical */
-function emModoVertical() {
-  return window.matchMedia("(orientation: portrait)").matches;
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
 }
 
-/* MENU MOBILE */
-function mostrarMenu() {
-  if (!emModoVertical()) return;
-  painel.classList.remove("oculto");
-  botaoPesquisarLateral.style.display = "none";
+body {
+  background: #f5f5f5;
+  color: #333;
 }
 
-function esconderMenu() {
-  if (!emModoVertical()) return;
-  painel.classList.add("oculto");
-  botaoPesquisarLateral.style.display = "flex";
+.topo {
+  background: #004b8d;
+  color: white;
+  padding: 20px;
+  text-align: center;
 }
 
-window.mostrarMenu = mostrarMenu;
-
-/* GERA ALFABETO */
-function gerarAlfabeto() {
-  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
-  letras.forEach(letra => {
-    const btn = document.createElement("button");
-    btn.textContent = letra;
-    btn.onclick = () => selecionarLetra(letra, btn);
-    listaAlfabetoEl.appendChild(btn);
-  });
+.layout {
+  display: flex;
+  max-width: 1300px;
+  margin: 20px auto;
+  gap: 20px;
+  padding: 0 15px;
 }
 
-/* SELECIONA LETRA */
-function selecionarLetra(letra, botao) {
-  letraAtual = letra;
-
-  document.querySelectorAll(".lista-alfabeto button")
-    .forEach(b => b.classList.remove("ativo"));
-  botao.classList.add("ativo");
-
-  carregarListaDePalavras(letra);
+.painel-esquerdo {
+  width: 320px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  background: white;
 }
 
-/* CARREGA LISTA DE PALAVRAS */
-async function carregarListaDePalavras(letra) {
-  listaPalavrasEl.innerHTML = "";
-
-  try {
-    const resposta = await fetch(`dados/${letra}.json`);
-    if (!resposta.ok) {
-      listaPalavrasEl.innerHTML = "<li>Nenhuma palavra cadastrada</li>";
-      return;
-    }
-
-    const lista = await resposta.json();
-    palavrasPorLetra[letra] = lista;
-
-    lista.forEach(p => {
-      const li = document.createElement("li");
-      li.textContent = p;
-      li.onclick = () => carregarPalavra(p);
-      listaPalavrasEl.appendChild(li);
-    });
-  } catch (e) {
-    listaPalavrasEl.innerHTML = "<li>Erro ao carregar palavras</li>";
-  }
+.busca, .alfabeto, .palavras {
+  background: white;
+  padding: 15px;
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-/* CARREGA PALAVRA */
-async function carregarPalavra(nome) {
-  conteudoResultadoEl.innerHTML = "";
-  modal.style.display = "none";
-  modalVideo.pause();
+.linha-busca {
+  display: flex;
+  gap: 10px;
+  margin-top: 10px;
+}
 
-  if (emModoVertical()) {
-    esconderMenu();
-  }
+.linha-busca input {
+  flex: 1;
+  padding: 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
 
-  try {
-    const resposta = await fetch(`dados/${nome}.json`);
-    if (!resposta.ok) {
-      tituloPalavraEl.textContent = nome;
-      conteudoResultadoEl.innerHTML = `
-        <p class="mensagem-erro">Palavra não encontrada no dicionário.</p>
-      `;
-      return;
-    }
+.linha-busca button {
+  padding: 8px 14px;
+  background: #004b8d;
+  color: white;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
 
-    const dados = await resposta.json();
+.lista-alfabeto {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 10px;
+}
 
-    tituloPalavraEl.textContent = nome;
+.lista-alfabeto button {
+  min-width: 32px;
+  height: 32px;
+  border: none;
+  background: transparent;
+  color: #004b8d;
+  font-weight: bold;
+  cursor: pointer;
+  text-decoration: underline;
+}
 
-    conteudoResultadoEl.innerHTML = `
-      <div class="galeria">
-        <video src="${dados.video}" autoplay loop muted></video>
-        ${dados.imagens.map(img => `
-          <img src="${img}" alt="${nome}">
-        `).join("")}
-      </div>
+.lista-alfabeto button.ativo {
+  color: white;
+  background: #004b8d;
+  border-radius: 4px;
+  text-decoration: none;
+  padding: 0 6px;
+}
 
-      <div class="descricao-box">
-        ${dados.texto}
-      </div>
-    `;
+#lista-palavras {
+  list-style: none;
+  max-height: 300px;
+  overflow-y: auto;
+  margin-top: 8px;
+}
 
-    const videoEl = document.querySelector(".galeria video");
-    if (videoEl) {
-      videoEl.onclick = () => abrirModalVideo(dados.video);
-    }
+#lista-palavras li {
+  padding: 6px;
+  border-bottom: 1px solid #eee;
+  cursor: pointer;
+}
 
-    document.querySelectorAll(".galeria img").forEach(img => {
-      img.onclick = () => abrirModalImagem(img.src);
-    });
+.resultado {
+  flex: 1;
+  background: white;
+  padding: 20px;
+  border-radius: 6px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
 
-  } catch (e) {
-    tituloPalavraEl.textContent = nome;
-    conteudoResultadoEl.innerHTML = `
-      <p class="mensagem-erro">Erro ao carregar os dados da palavra.</p>
-    `;
-  }
+.galeria {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+  gap: 15px;
+  margin-top: 20px;
+}
+
+.galeria img {
+  width: 100%;
+  aspect-ratio: 1 / 1;
+  object-fit: cover;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.galeria video {
+  width: 100%;
+  max-height: 300px;
+  object-fit: contain;
+  background: #000;
+  border-radius: 6px;
+}
+
+.descricao-box {
+  margin-top: 20px;
+  padding: 18px;
+  background: #e8f0fa;
+  border-left: 5px solid #004b8d;
+  border-radius: 6px;
+  font-size: 17px;
+  line-height: 1.7;
+  color: #1f2d3d;
+  font-weight: 500;
 }
 
 /* MODAL */
-function abrirModalImagem(src) {
-  modal.style.display = "block";
-  modalImg.style.display = "block";
-  modalVideo.style.display = "none";
-  modalImg.src = src;
+.modal {
+  display: none;
+  position: fixed;
+  z-index: 9999;
+  padding-top: 60px;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0,0,0,0.9);
 }
 
-function abrirModalVideo(src) {
-  modal.style.display = "block";
-  modalImg.style.display = "none";
-  modalVideo.style.display = "block";
-  modalVideo.src = src;
-  modalVideo.play();
+.modal-conteudo {
+  display: block;
+  margin: auto;
+  max-width: 90%;
+  max-height: 80%;
 }
 
-fecharModal.onclick = () => {
-  modal.style.display = "none";
-  modalVideo.pause();
-};
-
-window.onclick = e => {
-  if (e.target === modal) {
-    modal.style.display = "none";
-    modalVideo.pause();
-  }
-};
-
-/* BUSCA */
-botaoBuscarEl.onclick = () => {
-  const palavra = campoBuscaEl.value.trim().toUpperCase();
-  if (!palavra) return;
-  carregarPalavra(palavra);
-};
-
-campoBuscaEl.addEventListener("keyup", e => {
-  if (e.key === "Enter") {
-    const palavra = campoBuscaEl.value.trim().toUpperCase();
-    if (!palavra) return;
-    carregarPalavra(palavra);
-  }
-});
-
-/* Ajusta estado inicial conforme orientação */
-function ajustarEstadoInicial() {
-  if (emModoVertical()) {
-    painel.classList.remove("oculto");
-    botaoPesquisarLateral.style.display = "none";
-  } else {
-    painel.classList.remove("oculto");
-    botaoPesquisarLateral.style.display = "none";
-  }
+.fechar {
+  position: absolute;
+  top: 20px;
+  right: 40px;
+  font-size: 40px;
+  color: white;
+  cursor: pointer;
 }
 
-window.addEventListener("resize", ajustarEstadoInicial);
+/* Botão lateral PESQUISAR (escondido por padrão, controlado via JS) */
+.botao-pesquisar {
+  display: none;
+}
 
-/* INICIALIZA */
-gerarAlfabeto();
-ajustarEstadoInicial();
+/* MODO VERTICAL (CELULAR EM PÉ) */
+@media screen and (orientation: portrait) {
+
+  .layout {
+    flex-direction: column;
+  }
+
+  .painel-esquerdo {
+    position: fixed;
+    left: 0;
+    top: 0;
+    width: 80%;
+    max-width: 360px;
+    height: 100%;
+    z-index: 999;
+    box-shadow: 3px 0 10px rgba(0,0,0,0.2);
+    transition: left 0.3s ease;
+  }
+
+  .painel-esquerdo.oculto {
+    left: -100%;
+  }
+
+  .botao-pesquisar {
+    position: fixed;
+    left: 0;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 40px;
+    height: 140px;
+    background: #004b8d;
+    color: white;
+    writing-mode: vertical-rl;
+    text-orientation: upright;
+    font-weight: bold;
+    font-size: 16px;
+    border-radius: 0 6px 6px 0;
+    cursor: pointer;
+    z-index: 1000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+}
