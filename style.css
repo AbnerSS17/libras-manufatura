@@ -1,161 +1,119 @@
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: Arial, sans-serif;
+let palavrasPorLetra = {};
+let letraAtual = null;
+
+const listaAlfabetoEl = document.getElementById("lista-alfabeto");
+const listaPalavrasEl = document.getElementById("lista-palavras");
+const campoBuscaEl = document.getElementById("campo-busca");
+const botaoBuscarEl = document.getElementById("botao-buscar");
+const tituloPalavraEl = document.getElementById("titulo-palavra");
+const conteudoResultadoEl = document.getElementById("conteudo-resultado");
+
+const modal = document.getElementById("modal");
+const modalImg = document.getElementById("modal-img");
+const modalVideo = document.getElementById("modal-video");
+const fecharModal = document.getElementById("fechar-modal");
+
+function gerarAlfabeto() {
+  const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
+  letras.forEach(letra => {
+    const btn = document.createElement("button");
+    btn.textContent = letra;
+    btn.onclick = () => selecionarLetra(letra, btn);
+    listaAlfabetoEl.appendChild(btn);
+  });
 }
 
-body {
-  background: #f5f5f5;
-  color: #333;
+function selecionarLetra(letra, botao) {
+  letraAtual = letra;
+
+  document.querySelectorAll(".lista-alfabeto button")
+    .forEach(b => b.classList.remove("ativo"));
+  botao.classList.add("ativo");
+
+  carregarListaDePalavras(letra);
 }
 
-.topo {
-  background: #004b8d;
-  color: white;
-  padding: 20px;
-  text-align: center;
-}
+async function carregarListaDePalavras(letra) {
+  listaPalavrasEl.innerHTML = "";
 
-.layout {
-  display: flex;
-  max-width: 1300px;
-  margin: 20px auto;
-  gap: 20px;
-  padding: 0 15px;
-}
-
-.painel-esquerdo {
-  width: 320px;
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-}
-
-.busca, .alfabeto, .palavras {
-  background: white;
-  padding: 15px;
-  border-radius: 6px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-.linha-busca {
-  display: flex;
-  gap: 10px;
-  margin-top: 10px;
-}
-
-.linha-busca input {
-  flex: 1;
-  padding: 8px;
-  border: 1px solid #ccc;
-  border-radius: 4px;
-}
-
-.linha-busca button {
-  padding: 8px 14px;
-  background: #004b8d;
-  color: white;
-  border: none;
-  border-radius: 4px;
-  cursor: pointer;
-}
-
-.lista-alfabeto {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 10px;
-}
-
-.lista-alfabeto button {
-  min-width: 32px;
-  height: 32px;
-  border: none;
-  background: transparent;
-  color: #004b8d;
-  font-weight: bold;
-  cursor: pointer;
-  text-decoration: underline;
-}
-
-.lista-alfabeto button.ativo {
-  color: white;
-  background: #004b8d;
-  border-radius: 4px;
-  text-decoration: none;
-  padding: 0 6px;
-}
-
-#lista-palavras {
-  list-style: none;
-  max-height: 300px;
-  overflow-y: auto;
-  margin-top: 8px;
-}
-
-#lista-palavras li {
-  padding: 6px;
-  border-bottom: 1px solid #eee;
-  cursor: pointer;
-}
-
-.resultado {
-  flex: 1;
-  background: white;
-  padding: 20px;
-  border-radius: 6px;
-  box-shadow: 0 0 5px rgba(0,0,0,0.1);
-}
-
-/* GRID PROFISSIONAL */
-.galeria {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-  gap: 15px;
-  margin-top: 20px;
-}
-
-.galeria img,
-.galeria video {
-  width: 100%;
-  height: 220px;
-  object-fit: cover;
-  border-radius: 6px;
-  cursor: pointer;
-}
-
-/* MODAL */
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 9999;
-  padding-top: 60px;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background: rgba(0,0,0,0.9);
-}
-
-.modal-conteudo {
-  display: block;
-  margin: auto;
-  max-width: 90%;
-  max-height: 80%;
-}
-
-.fechar {
-  position: absolute;
-  top: 20px;
-  right: 40px;
-  font-size: 40px;
-  color: white;
-  cursor: pointer;
-}
-
-@media (max-width: 900px) {
-  .layout {
-    flex-direction: column;
+  const resposta = await fetch(`dados/${letra}.json`);
+  if (!resposta.ok) {
+    listaPalavrasEl.innerHTML = "<li>Nenhuma palavra cadastrada</li>";
+    return;
   }
+
+  const lista = await resposta.json();
+  palavrasPorLetra[letra] = lista;
+
+  lista.forEach(p => {
+    const li = document.createElement("li");
+    li.textContent = p;
+    li.onclick = () => carregarPalavra(p);
+    listaPalavrasEl.appendChild(li);
+  });
 }
+
+async function carregarPalavra(nome) {
+  const resposta = await fetch(`dados/${nome}.json`);
+  const dados = await resposta.json();
+
+  tituloPalavraEl.textContent = nome;
+
+  conteudoResultadoEl.innerHTML = `
+    <div class="galeria">
+      <video src="${dados.video}" autoplay loop muted></video>
+      ${dados.imagens.map(img => `
+        <img src="${img}" alt="${nome}">
+      `).join("")}
+    </div>
+
+    <p class="descricao">${dados.texto}</p>
+  `;
+
+  document.querySelector(".galeria video").onclick = () => abrirModalVideo(dados.video);
+
+  document.querySelectorAll(".galeria img").forEach(img => {
+    img.onclick = () => abrirModalImagem(img.src);
+  });
+}
+
+function abrirModalImagem(src) {
+  modal.style.display = "block";
+  modalImg.style.display = "block";
+  modalVideo.style.display = "none";
+  modalImg.src = src;
+}
+
+function abrirModalVideo(src) {
+  modal.style.display = "block";
+  modalImg.style.display = "none";
+  modalVideo.style.display = "block";
+  modalVideo.src = src;
+  modalVideo.play();
+}
+
+fecharModal.onclick = () => {
+  modal.style.display = "none";
+  modalVideo.pause();
+};
+
+window.onclick = e => {
+  if (e.target === modal) {
+    modal.style.display = "none";
+    modalVideo.pause();
+  }
+};
+
+botaoBuscarEl.onclick = () => {
+  const palavra = campoBuscaEl.value.trim().toUpperCase();
+  if (palavra) carregarPalavra(palavra);
+};
+
+campoBuscaEl.addEventListener("keyup", e => {
+  if (e.key === "Enter") {
+    const palavra = campoBuscaEl.value.trim().toUpperCase();
+    if (palavra) carregarPalavra(palavra);
+  }
+});
+
+gerarAlfabeto();
