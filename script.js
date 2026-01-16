@@ -13,6 +13,21 @@ const modalImg = document.getElementById("modal-img");
 const modalVideo = document.getElementById("modal-video");
 const fecharModal = document.getElementById("fechar-modal");
 
+const painel = document.getElementById("painel");
+
+/* MENU MOBILE */
+function mostrarMenu() {
+  painel.classList.remove("oculto");
+}
+
+function esconderMenu() {
+  painel.classList.add("oculto");
+}
+
+window.mostrarMenu = mostrarMenu;
+window.esconderMenu = esconderMenu;
+
+/* GERA ALFABETO */
 function gerarAlfabeto() {
   const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   letras.forEach(letra => {
@@ -23,6 +38,7 @@ function gerarAlfabeto() {
   });
 }
 
+/* SELECIONA LETRA */
 function selecionarLetra(letra, botao) {
   letraAtual = letra;
 
@@ -33,6 +49,7 @@ function selecionarLetra(letra, botao) {
   carregarListaDePalavras(letra);
 }
 
+/* CARREGA LISTA DE PALAVRAS */
 async function carregarListaDePalavras(letra) {
   listaPalavrasEl.innerHTML = "";
 
@@ -57,10 +74,13 @@ async function carregarListaDePalavras(letra) {
   }
 }
 
+/* CARREGA PALAVRA */
 async function carregarPalavra(nome) {
   conteudoResultadoEl.innerHTML = "";
   modal.style.display = "none";
   modalVideo.pause();
+
+  esconderMenu(); // fecha o menu no celular
 
   try {
     const resposta = await fetch(`dados/${nome}.json`);
@@ -106,6 +126,7 @@ async function carregarPalavra(nome) {
   }
 }
 
+/* MODAL */
 function abrirModalImagem(src) {
   modal.style.display = "block";
   modalImg.style.display = "block";
@@ -133,6 +154,7 @@ window.onclick = e => {
   }
 };
 
+/* BUSCA */
 botaoBuscarEl.onclick = () => {
   const palavra = campoBuscaEl.value.trim().toUpperCase();
   if (!palavra) return;
@@ -147,11 +169,5 @@ campoBuscaEl.addEventListener("keyup", e => {
   }
 });
 
-function mostrarMenu() {
-  const painel = document.querySelector(".painel-esquerdo");
-  painel.classList.toggle("visivel");
-}
-
-window.mostrarMenu = mostrarMenu;
-
+/* INICIALIZA */
 gerarAlfabeto();
