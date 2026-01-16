@@ -36,46 +36,76 @@ function selecionarLetra(letra, botao) {
 async function carregarListaDePalavras(letra) {
   listaPalavrasEl.innerHTML = "";
 
-  const resposta = await fetch(`dados/${letra}.json`);
-  if (!resposta.ok) {
-    listaPalavrasEl.innerHTML = "<li>Nenhuma palavra cadastrada</li>";
-    return;
+  try {
+    const resposta = await fetch(`dados/${letra}.json`);
+    if (!resposta.ok) {
+      listaPalavrasEl.innerHTML = "<li>Nenhuma palavra cadastrada</li>";
+      return;
+    }
+
+    const lista = await resposta.json();
+    palavrasPorLetra[letra] = lista;
+
+    lista.forEach(p => {
+      const li = document.createElement("li");
+      li.textContent = p;
+      li.onclick = () => carregarPalavra(p);
+      listaPalavrasEl.appendChild(li);
+    });
+  } catch (e) {
+    listaPalavrasEl.innerHTML = "<li>Erro ao carregar palavras</li>";
   }
-
-  const lista = await resposta.json();
-  palavrasPorLetra[letra] = lista;
-
-  lista.forEach(p => {
-    const li = document.createElement("li");
-    li.textContent = p;
-    li.onclick = () => carregarPalavra(p);
-    listaPalavrasEl.appendChild(li);
-  });
 }
 
 async function carregarPalavra(nome) {
-  const resposta = await fetch(`dados/${nome}.json`);
-  const dados = await resposta.json();
 
-  tituloPalavraEl.textContent = nome;
+  // LIMPA TUDO ANTES DE CARREGAR A NOVA PALAVRA
+  conteudoResultadoEl.innerHTML = "";
+  modal.style.display = "none";
+  modalVideo.pause();
 
-  conteudoResultadoEl.innerHTML = `
-    <video class="video-grande" src="${dados.video}" autoplay loop muted></video>
+  try {
+    const resposta = await fetch(`dados/${nome}.json`);
+    if (!resposta.ok) {
+      tituloPalavraEl.textContent = nome;
+      conteudoResultadoEl.innerHTML = `
+        <p class="mensagem-erro">Palavra não encontrada no dicionário.</p>
+      `;
+      return;
+    }
 
-    <div class="galeria">
-      ${dados.imagens.map(img => `
-        <img src="${img}" alt="${nome}">
-      `).join("")}
-    </div>
+    const dados = await resposta.json();
 
-    <p class="descricao">${dados.texto}</p>
-  `;
+    tituloPalavraEl.textContent = nome;
 
-  document.querySelector(".video-grande").onclick = () => abrirModalVideo(dados.video);
+    conteudoResultadoEl.innerHTML = `
+      <div class="galeria">
+        <video src="${dados.video}" autoplay loop muted></video>
+        ${dados.imagens.map(img => `
+          <img src="${img}" alt="${nome}">
+        `).join("")}
+      </div>
 
-  document.querySelectorAll(".galeria img").forEach(img => {
-    img.onclick = () => abrirModalImagem(img.src);
-  });
+      <div class="descricao-box">
+        ${dados.texto}
+      </div>
+    `;
+
+    const videoEl = document.querySelector(".galeria video");
+    if (videoEl) {
+      videoEl.onclick = () => abrirModalVideo(dados.video);
+    }
+
+    document.querySelectorAll(".galeria img").forEach(img => {
+      img.onclick = () => abrirModalImagem(img.src);
+    });
+
+  } catch (e) {
+    tituloPalavraEl.textContent = nome;
+    conteudoResultadoEl.innerHTML = `
+      <p class="mensagem-erro">Erro ao carregar os dados da palavra.</p>
+    `;
+  }
 }
 
 function abrirModalImagem(src) {
@@ -107,13 +137,15 @@ window.onclick = e => {
 
 botaoBuscarEl.onclick = () => {
   const palavra = campoBuscaEl.value.trim().toUpperCase();
-  if (palavra) carregarPalavra(palavra);
+  if (!palavra) return;
+  carregarPalavra(palavra);
 };
 
 campoBuscaEl.addEventListener("keyup", e => {
   if (e.key === "Enter") {
     const palavra = campoBuscaEl.value.trim().toUpperCase();
-    if (palavra) carregarPalavra(palavra);
+    if (!palavra) return;
+    carregarPalavra(palavra);
   }
 });
 
