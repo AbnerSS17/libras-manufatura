@@ -10,7 +10,6 @@ const modalImg = document.getElementById("modal-img");
 const modalVideo = document.getElementById("modal-video");
 const fecharModal = document.getElementById("fechar-modal");
 
-/* Estado inicial */
 function estadoInicial() {
   tituloPalavraEl.textContent = "Selecione uma palavra";
   conteudoResultadoEl.innerHTML = `
@@ -18,7 +17,6 @@ function estadoInicial() {
   `;
 }
 
-/* Alfabeto */
 function gerarAlfabeto() {
   const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ".split("");
   letras.forEach(letra => {
@@ -36,7 +34,6 @@ function selecionarLetra(letra, botao) {
   carregarListaDePalavras(letra);
 }
 
-/* Lista de palavras */
 async function carregarListaDePalavras(letra) {
   listaPalavrasEl.innerHTML = "";
   try {
@@ -57,7 +54,6 @@ async function carregarListaDePalavras(letra) {
   }
 }
 
-/* Carregar palavra */
 async function carregarPalavra(nome) {
   conteudoResultadoEl.innerHTML = "";
   modal.style.display = "none";
@@ -83,23 +79,20 @@ async function carregarPalavra(nome) {
       </div>
 
       <div class="galeria">
-        ${dados.video ? `<video src="${dados.video}" autoplay loop muted></video>` : ""}
+        ${dados.videos ? dados.videos.map(v => `
+          <video src="${v}" autoplay loop muted></video>
+        `).join("") : ""}
         ${dados.imagens ? dados.imagens.map(img => `
           <img src="${img}" alt="${nome}">
         `).join("") : ""}
       </div>
     `;
 
-    /* Garante que TODOS os vídeos fiquem mudos */
     document.querySelectorAll("video").forEach(v => {
       v.muted = true;
       v.volume = 0;
+      v.onclick = () => abrirModalVideo(v.src);
     });
-
-    const videoEl = document.querySelector(".galeria video");
-    if (videoEl) {
-      videoEl.onclick = () => abrirModalVideo(dados.video);
-    }
 
     document.querySelectorAll(".galeria img").forEach(img => {
       img.onclick = () => abrirModalImagem(img.src);
@@ -113,7 +106,6 @@ async function carregarPalavra(nome) {
   }
 }
 
-/* Modal imagem */
 function abrirModalImagem(src) {
   modal.style.display = "block";
   modalImg.style.display = "block";
@@ -121,7 +113,6 @@ function abrirModalImagem(src) {
   modalImg.src = src;
 }
 
-/* Modal vídeo */
 function abrirModalVideo(src) {
   modal.style.display = "block";
   modalImg.style.display = "none";
@@ -132,7 +123,6 @@ function abrirModalVideo(src) {
   modalVideo.play();
 }
 
-/* Fechar modal */
 fecharModal.onclick = () => {
   modal.style.display = "none";
   modalVideo.pause();
@@ -145,7 +135,6 @@ window.onclick = e => {
   }
 };
 
-/* Busca */
 botaoBuscarEl.onclick = () => {
   const palavra = campoBuscaEl.value.trim().toUpperCase();
   if (!palavra) return;
@@ -160,7 +149,6 @@ campoBuscaEl.addEventListener("keyup", e => {
   }
 });
 
-/* Garante que QUALQUER vídeo da página sempre fique mudo */
 document.addEventListener("DOMContentLoaded", () => {
   document.querySelectorAll("video").forEach(v => {
     v.muted = true;
@@ -168,7 +156,6 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 });
 
-/* 🔇 Força o vídeo a continuar mudo mesmo em tela cheia */
 function aplicarMuteFullscreen() {
   const fullscreenEvents = [
     "fullscreenchange",
@@ -179,7 +166,7 @@ function aplicarMuteFullscreen() {
 
   fullscreenEvents.forEach(eventName => {
     document.addEventListener(eventName, () => {
-      const video = 
+      const video =
         document.fullscreenElement ||
         document.webkitFullscreenElement ||
         document.mozFullScreenElement ||
@@ -194,7 +181,5 @@ function aplicarMuteFullscreen() {
 }
 
 aplicarMuteFullscreen();
-
-/* Inicialização */
 gerarAlfabeto();
 estadoInicial();
