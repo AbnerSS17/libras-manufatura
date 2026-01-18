@@ -1,0 +1,12 @@
+{
+   "texto": "O sinal de GOIABA em LIBRAS representa a fruta sendo segurada e a polpa retirada.",
+  "videos": [ 
+             "conteudo/SERVIDORES/video.mp4", 
+             "conteudo/SERVIDORES/video2.mp4"
+             ],
+  "imagens": [
+    "conteudo/SERVIDORES/principal.png",
+    "conteudo/SERVIDORES/1.jpg"
+   
+             ]
+}
