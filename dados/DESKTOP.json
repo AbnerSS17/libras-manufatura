@@ -3,7 +3,7 @@
 
 
   "videos": [ 
-             "conteudo/DESKTOP/video1.mp4", 
+             "conteudo/DESKTOP/video.mp4", 
              "conteudo/DESKTOP/video2.mp4",
               "conteudo/DESKTOP/video3.mp4"
              ],
@@ -13,3 +13,4 @@
              ]
 
 }
+
