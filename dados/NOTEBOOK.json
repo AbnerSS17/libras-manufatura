@@ -1,0 +1,13 @@
+{
+   "texto": "O sinal representa a ideia de um computador Notebook, destacando o formato dobrável característico desse equipamento.\nAs duas mãos ficam abertas e posicionadas horizontalmente, com as palmas voltadas uma para a outra, simbolizando as duas partes do notebook.\nA mão não dominante permanece fixa, representando a base do equipamento, onde ficam o teclado e o touchpad.\nA mão dominante realiza um movimento de abertura, como se estivesse levantando a tela do notebook, reproduzindo o gesto de abrir o LCD.",
+
+
+  "videos": [ 
+             "conteudo/NOTEBOOK/video.mp4", 
+             "conteudo/NOTEBOOK/video2.mp4"
+                           ],
+  "imagens": [
+    "conteudo/NOTEBOOK/principal.png"
+    
+             ]
+}
