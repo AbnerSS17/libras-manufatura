@@ -1,8 +1,6 @@
 {
-   "texto": "O sinal representa a ideia de máquina e conexão de cabos,
-              como ocorre na parte traseira de um servidor físico. 
-                Realiza um movimento de encaixe ou conexão, 
-    como se estivesse plugando cabos nos conectores traseiros de um equipamento.",
+   "texto": "O sinal representa a ideia de máquina e conexão de cabos,\ncomo ocorre na parte traseira de um servidor físico.\nRealiza um movimento de encaixe ou conexão,\ncomo se estivesse plugando cabos nos conectores traseiros de um equipamento.",
+
   "videos": [ 
              "conteudo/SERVIDORES/video.mp4", 
              "conteudo/SERVIDORES/video2.mp4"
@@ -14,3 +12,4 @@
              ]
 
 }
+
